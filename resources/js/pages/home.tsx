@@ -1,0 +1,24 @@
+import Navbar from '@/components/shop/header'
+import Hero from '@/components/shop/hero'
+import ProductsByCategory from '@/components/shop/products-by-category'
+import Footer from '@/components/shop/footer'
+import ContactForm from '@/components/contact/ContactForm'
+
+type PageProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  categories: any[]
+}
+
+export default function HomePage({ categories }: PageProps) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <Hero />
+      <ProductsByCategory categories={categories} />
+      <ContactForm />
+      <Footer />
+    </div>
+  )
+}
+
+
