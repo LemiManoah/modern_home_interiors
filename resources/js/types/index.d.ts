@@ -53,11 +53,24 @@ export interface Category {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface ProductImage {
+    id: number;
+    path: string;
+    is_primary: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Product {
     id: number;
     name: string;
     description: string;
-    image: string;
+    image: string;  // Keeping this for backward compatibility
+    images: ProductImage[];
+    category_id: number;
+    category?: Category;
+    price: number;
+    sale_price: number;
     is_active: boolean;
     is_featured: boolean;
     created_at: string;

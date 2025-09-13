@@ -36,11 +36,15 @@ class CategoryController extends Controller
 	public function store(CategoryRequest $request)
 	{
 		$data = $request->validated();
-		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')->store('categories', 'public');
-		}
-		Category::create($data);
-		return redirect()->route('admin.categories.index');
+    
+    if ($request->hasFile('image')) {
+      $data['image'] = $request->file('image')->store('categories', 'public');
+    }
+    
+    Category::create($data);
+    
+    return redirect()->route('admin.categories.index')
+      ->with('success', 'Category created successfully.');
 	}
 
 	/**
@@ -69,14 +73,20 @@ class CategoryController extends Controller
 	public function update(CategoryRequest $request, Category $category)
 	{
 		$data = $request->validated();
-		if ($request->hasFile('image')) {
-			if ($category->image) {
-				Storage::disk('public')->delete($category->image);
-			}
-			$data['image'] = $request->file('image')->store('categories', 'public');
-		}
-		$category->update($data);
-		return redirect()->route('admin.categories.index');
+    
+    if ($request->hasFile('image')) {
+      // Delete old image if it exists
+      if ($category->image) {
+        Storage::disk('public')->delete($category->image);
+      }
+      // Store new image
+      $data['image'] = $request->file('image')->store('categories', 'public');
+    }
+    
+    $category->update($data);
+    
+    return redirect()->route('admin.categories.index')
+      ->with('success', 'Category updated successfully.');
 	}
 
 	/**

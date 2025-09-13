@@ -10,22 +10,17 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = Category::query()
-            ->where('is_active', true)
-            ->with(['products' => function ($query) {
-                $query->where('is_active', true)
-                    ->with(['images' => function ($q) {
-                        $q->orderBy('is_primary', 'desc')->orderBy('position');
-                    }])
-                    ->latest()
-                    ->limit(8);
-            }])
-            ->orderBy('is_featured', 'desc')
-            ->orderBy('name')
-            ->get();
-
+        $categories = Category::with(['products' => function($query) {
+            $query->with('images')
+                  ->where('is_active', true)
+                  ->orderBy('created_at', 'desc')
+                  ->take(8); // Adjust number of products per category
+        }])->whereHas('products', function($query) {
+            $query->where('is_active', true);
+        })->get();
+    
         return Inertia::render('home', [
-            'categories' => $categories,
+            'categories' => $categories
         ]);
     }
 }

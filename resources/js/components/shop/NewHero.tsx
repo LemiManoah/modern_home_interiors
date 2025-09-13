@@ -27,16 +27,16 @@ export default function NewHero() {
               We create beautiful, functional spaces that reflect your unique style.
             </p>
             
-            <div className="flex flex-wrap gap-3 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <Link 
                 href="/catalogue" 
-                className="inline-flex items-center justify-center px-4 py-1.5 sm:px-5 sm:py-2 text-sm sm:text-base bg-white/10 hover:bg-white/20 text-white font-medium rounded-md transition-colors duration-300"
+                className="px-4 py-1.5 sm:px-5 sm:py-2 text-sm sm:text-base bg-white/10 hover:bg-white/20 text-white font-medium rounded-md transition-colors duration-300 text-center"
               >
                 Explore
               </Link>
               <Link 
                 href="#contact" 
-                className="inline-flex items-center justify-center px-4 py-1.5 sm:px-5 sm:py-2 text-sm sm:text-base bg-transparent border-2 border-white text-white hover:bg-white/10 font-medium rounded-md transition-colors duration-300"
+                className="px-4 py-1.5 sm:px-5 sm:py-2 text-sm sm:text-base bg-transparent border-2 border-white text-white hover:bg-white/10 font-medium rounded-md transition-colors duration-300 text-center"
               >
                 Reach Us
               </Link>

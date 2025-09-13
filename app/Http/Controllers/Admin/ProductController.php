@@ -142,4 +142,18 @@ class ProductController extends Controller
 		$product->delete();
 		return back();
 	}
+
+	/**
+ * Remove the specified product image from storage.
+ */
+public function destroyImage(ProductImage $image)
+{
+    // Delete the file from storage
+    Storage::disk('public')->delete($image->path);
+    
+    // Delete the image record
+    $image->delete();
+    
+    return response()->noContent();
+}
 }

@@ -32,4 +32,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('products', AdminProductController::class);
     Route::resource('users', AdminUserController::class);
+
+    // Add this route with the others
+    Route::delete('products/images/{image}', [AdminProductController::class, 'destroyImage'])
+    ->name('admin.products.images.destroy');
 });
