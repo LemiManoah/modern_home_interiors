@@ -41,6 +41,18 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface EditUser {
+    id: number;
+    name: string;
+    email: string;
+    password?: string;
+    avatar?: string;
+    email_verified_at?: string | null;
+    created_at: string;
+    updated_at: string;
+    [key: string]: unknown; // This allows for additional properties...
+}
+
 export interface Category {
     id: number;
     name: string;
@@ -71,11 +83,14 @@ export interface Product {
     category?: Category;
     price: number;
     sale_price: number;
+    stock_quantity: number;
+    specifications: string;
     is_active: boolean;
     is_featured: boolean;
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
 
 
