@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { X, Upload } from 'lucide-react';
+import { Loader2, Star, Trash2, Upload } from 'lucide-react';
 import InputError from '@/components/input-error';
 
 
@@ -133,233 +133,235 @@ export default function AdminProductForm({ product, categories }: AdminProductFo
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title={product ? 'Edit Product' : 'Create Product'} />
-      <div className="container mx-auto py-6 px-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>{product ? 'Edit Product' : 'Create New Product'}</CardTitle>
+      <div className="container mx-auto py-4 sm:py-6 px-3 sm:px-4">
+        <Card className="border-0 sm:border">
+          <CardHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 sm:pb-4">
+            <CardTitle className="text-xl sm:text-2xl">
+              {product ? 'Edit Product' : 'Create New Product'}
+            </CardTitle>
           </CardHeader>
           <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+              <div className="grid grid-cols-1 gap-4 sm:gap-6">
                 {/* Name */}
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="name">Product Name</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-sm sm:text-base">Product Name</Label>
                   <Input
                     id="name"
                     value={data.name}
                     onChange={(e) => setData('name', e.target.value)}
                     placeholder="Enter product name"
+                    className="py-3 sm:py-2 text-sm sm:text-base"
                   />
-                  <InputError message={errors.name} className="mt-1" />
+                  <InputError message={errors.name} className="mt-1 text-xs sm:text-sm" />
                 </div>
 
                 {/* Category */}
                 <div className="space-y-2">
-                  <Label htmlFor="category_id">Category</Label>
+                  <Label htmlFor="category_id" className="text-sm sm:text-base">Category</Label>
                   <select
                     id="category_id"
                     value={data.category_id}
                     onChange={e => setData('category_id', e.target.value)}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-11 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                  <option value="">Select a category</option>
-                  {categories.map(category => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-                  <InputError message={errors.category_id} className="mt-1" />
-              </div>
-
-                {/* Price */}
-                <div className="space-y-2">
-                  <Label htmlFor="price">Price</Label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-muted-foreground">$</span>
-                    </div>
-                    <Input
-                      id="price"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={data.price}
-                      onChange={(e) => setData('price', e.target.value)}
-                      className="pl-8"
-                    />
-                  </div>
-                  <InputError message={errors.price} className="mt-1" />
+                    <option value="">Select a category</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                  <InputError message={errors.category_id} className="mt-1 text-xs sm:text-sm" />
                 </div>
 
-                {/* Sale Price */}
-                <div className="space-y-2">
-                  <Label htmlFor="sale_price">Sale Price (Optional)</Label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-muted-foreground">$</span>
+                {/* Price and Sale Price in a grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  {/* Price */}
+                  <div className="space-y-2">
+                    <Label htmlFor="price" className="text-sm sm:text-base">Price</Label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-muted-foreground text-sm sm:text-base">$</span>
+                      </div>
+                      <Input
+                        id="price"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={data.price}
+                        onChange={(e) => setData('price', e.target.value)}
+                        className="pl-8 py-3 sm:py-2 text-sm sm:text-base"
+                        inputMode="decimal"
+                      />
                     </div>
-                    <Input
-                      id="sale_price"
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={data.sale_price}
-                      onChange={(e) => setData('sale_price', e.target.value)}
-                      className="pl-8"
-                    />
+                    <InputError message={errors.price} className="mt-1 text-xs sm:text-sm" />
                   </div>
-                  <InputError message={errors.sale_price} className="mt-1" />
+
+                  {/* Sale Price */}
+                  <div className="space-y-2">
+                    <Label htmlFor="sale_price" className="text-sm sm:text-base">Sale Price (Optional)</Label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span className="text-muted-foreground text-sm sm:text-base">$</span>
+                      </div>
+                      <Input
+                        id="sale_price"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={data.sale_price}
+                        onChange={(e) => setData('sale_price', e.target.value)}
+                        className="pl-8 py-3 sm:py-2 text-sm sm:text-base"
+                        inputMode="decimal"
+                      />
+                    </div>
+                    <InputError message={errors.sale_price} className="mt-1 text-xs sm:text-sm" />
+                  </div>
                 </div>
 
                 {/* Status Toggles */}
-                <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-8 col-span-2">
-                  <div className="flex items-center space-x-2">
+                <div className="flex flex-wrap gap-4 sm:gap-8 py-2">
+                  <div className="flex items-center space-x-3">
                     <Switch
                       id="is_active"
                       checked={data.is_active}
                       onCheckedChange={(checked) => setData('is_active', checked)}
+                      className="h-5 w-9"
                     />
-                    <Label htmlFor="is_active">Active</Label>
+                    <Label htmlFor="is_active" className="text-sm sm:text-base cursor-pointer">Active</Label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Switch
                       id="is_featured"
                       checked={data.is_featured}
                       onCheckedChange={(checked) => setData('is_featured', checked)}
+                      className="h-5 w-9"
                     />
-                    <Label htmlFor="is_featured">Featured</Label>
+                    <Label htmlFor="is_featured" className="text-sm sm:text-base cursor-pointer">Featured</Label>
                   </div>
                 </div>
 
                 {/* Description */}
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="description">Description</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-sm sm:text-base">Description</Label>
                   <Textarea
                     id="description"
-                    rows={4}
+                    rows={5}
                     value={data.description}
                     onChange={(e) => setData('description', e.target.value)}
                     placeholder="Enter product description"
-                    className="min-h-[120px]"
+                    className="min-h-[140px] text-sm sm:text-base"
                   />
                 </div>
 
                 {/* Image Upload */}
-                <div className="space-y-4 col-span-2">
-                  <Label>Images</Label>
-                  <div className="border-2 border-dashed rounded-lg p-6 text-center">
-                    <div className="space-y-2">
-                      <Upload className="mx-auto h-10 w-10 text-muted-foreground" />
-                      <div className="flex flex-col sm:flex-row justify-center gap-2 text-sm">
-                        <label
-                          htmlFor="file-upload"
-                          className="relative cursor-pointer font-medium text-primary hover:text-primary/90"
+                <div className="space-y-4">
+                  <Label className="text-sm sm:text-base">Product Images</Label>
+                  <div className="border-2 border-dashed rounded-lg p-4 sm:p-6 text-center">
+                    <div className="space-y-3">
+                      <Upload className="mx-auto h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+                      <div className="flex flex-col items-center space-y-2">
+                        <Label
+                          htmlFor="images"
+                          className="relative cursor-pointer text-sm sm:text-base font-medium text-primary hover:text-primary/90 transition-colors"
                         >
-                          <span>Upload files</span>
-                          <input
-                            id="file-upload"
-                            name="file-upload"
+                          <span>Click to upload</span>
+                          <Input
+                            id="images"
+                            name="images"
                             type="file"
-                            multiple
                             className="sr-only"
+                            multiple
                             onChange={onFilesChanged}
                             accept="image/*"
                           />
-                        </label>
-                        <p className="text-muted-foreground">or drag and drop</p>
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          PNG, JPG, GIF up to 10MB
+                        </p>
                       </div>
-                      <p className="text-xs text-muted-foreground">PNG, JPG, GIF up to 10MB</p>
                     </div>
-                  </div>
-                  {errors.images && (
-                    <p className="text-sm font-medium text-destructive">
-                      {errors.images}
-                    </p>
-                  )}
-                  
-                  {/* Image Previews */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    {/* Existing Images */}
-                    {product?.images?.map((img, idx) => (
-                      <div key={img.id} className="relative group">
-                        <img
-                          src={`/storage/${img.path}`}
-                          alt={`Product ${idx + 1}`}
-                          className="h-32 w-full object-cover rounded-md"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (confirm('Are you sure you want to delete this image?')) {
-                              router.delete(`/admin/products/images/${img.id}`, {
-                                preserveScroll: true,
-                                preserveState: true,
-                              });
-                            }
-                          }}
-                          className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setData('primary_image_index', idx)}
-                          className={`absolute bottom-1 right-1 rounded-full px-2 py-1 text-xs ${
-                            data.primary_image_index === idx
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-background/90 text-foreground hover:bg-accent'
-                          }`}
-                        >
-                          {data.primary_image_index === idx ? 'Primary' : 'Set Primary'}
-                        </button>
+
+                    {/* Image Previews */}
+                    {previews.length > 0 && (
+                      <div className="mt-6">
+                        <h3 className="text-sm font-medium mb-3 text-left">Selected Images ({previews.length})</h3>
+                        <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                          {previews.map((preview, index) => (
+                            <div key={index} className="relative aspect-square rounded-md overflow-hidden group">
+                              <img
+                                src={preview}
+                                alt={`Preview ${index + 1}`}
+                                className="h-full w-full object-cover"
+                              />
+                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2">
+                                <Button
+                                  type="button"
+                                  variant="secondary"
+                                  size="icon"
+                                  className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-background/80 hover:bg-background"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeImage(index);
+                                  }}
+                                >
+                                  <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                  <span className="sr-only">Remove</span>
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant="secondary"
+                                  size="icon"
+                                  className={`h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-background/80 hover:bg-background ${data.primary_image_index === index + (product?.images?.length || 0) ? 'text-yellow-500' : ''}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setData('primary_image_index', index + (product?.images?.length || 0));
+                                  }}
+                                  disabled={data.primary_image_index === index + (product?.images?.length || 0)}
+                                >
+                                  <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4" fill={data.primary_image_index === index + (product?.images?.length || 0) ? 'currentColor' : 'none'} />
+                                  <span className="sr-only">Set as primary</span>
+                                </Button>
+                              </div>
+                              {data.primary_image_index === index + (product?.images?.length || 0) && (
+                                <div className="absolute top-1 right-1 bg-primary text-primary-foreground rounded-full p-1">
+                                  <Star className="h-2.5 w-2.5" fill="currentColor" />
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ))}
-                    
-                    {/* New Image Previews */}
-                    {previews.map((preview, idx) => (
-                      <div key={idx} className="relative group">
-                        <img
-                          src={preview}
-                          alt={`New upload ${idx + 1}`}
-                          className="h-32 w-full object-cover rounded-md"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(idx)}
-                          className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setData('primary_image_index', idx + (product?.images?.length || 0))}
-                          className={`absolute bottom-1 right-1 rounded-full px-2 py-1 text-xs ${
-                            data.primary_image_index === idx + (product?.images?.length || 0)
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-background/90 text-foreground hover:bg-accent'
-                          }`}
-                        >
-                          {data.primary_image_index === idx + (product?.images?.length || 0) ? 'Primary' : 'Set Primary'}
-                        </button>
-                      </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
             </CardContent>
-            <div className="border-t px-6 py-4">
-              <div className="flex justify-end gap-4">
+            <div className="border-t px-4 sm:px-6 py-4">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 w-full">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => router.visit('/admin/products')}
                   disabled={processing}
+                  className="w-full sm:w-auto"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={processing}>
-                  {processing ? 'Saving...' : 'Save Product'}
+                <Button 
+                  type="submit" 
+                  disabled={processing}
+                  className="w-full sm:w-auto"
+                >
+                  {processing ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Saving...</span>
+                    </div>
+                  ) : (
+                    'Save Product'
+                  )}
                 </Button>
               </div>
             </div>

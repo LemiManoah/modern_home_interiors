@@ -25,6 +25,11 @@ const mainNavItems: NavItem[] = [
         href: '/admin/products',
         icon: LayoutGrid,
     },
+    // {
+    //     title: 'Contact Messages',
+    //     href: '/admin/contact-messages',
+    //     icon: MessageSquare,
+    // },
     {
         title: 'Users',
         href: '/admin/users',
