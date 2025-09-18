@@ -98,6 +98,6 @@ class CategoryController extends Controller
 			Storage::disk('public')->delete($category->image);
 		}
 		$category->delete();
-		return back();
+		return to_route('admin.categories.index')->with('success', 'Category deleted successfully.');
 	}
 }

@@ -19,6 +19,7 @@ class Product extends Model
         'description',
         'price',
         'sale_price',
+        'stock_quantity',
         'is_active',
         'is_featured',
     ];
@@ -28,6 +29,7 @@ class Product extends Model
         return [
             'price' => 'decimal:0',
             'sale_price' => 'decimal:0',
+            'stock_quantity' => 'decimal:2',
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
         ];
@@ -41,11 +43,6 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class);
-    }
-
-    public function tags(): BelongsToMany
-    {
-        return $this->belongsToMany(Tag::class);
     }
 
     public function scopeActive($query)

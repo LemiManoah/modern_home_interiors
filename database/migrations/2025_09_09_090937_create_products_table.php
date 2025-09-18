@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('sale_price', 10, 0)->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_featured')->default(false);
+            $table->decimal('stock_quantity', 10, 2)->default(0); 
             $table->timestamps();
         });
     }

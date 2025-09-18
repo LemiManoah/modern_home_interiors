@@ -112,7 +112,7 @@ export default function Dashboard() {
                                             <div>
                                                 <p className="font-medium">{product.name}</p>
                                                 <p className="text-sm text-muted-foreground">
-                                                    ${product.price.toLocaleString()}
+                                                    UGX {product.price.toLocaleString()}
                                                 </p>
                                             </div>
                                             {product.is_featured && (
