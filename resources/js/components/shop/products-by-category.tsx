@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { useState } from 'react';
 
 interface ProductImage {
   id: number;
@@ -34,10 +35,19 @@ const ProductCard = ({ product }: { product: Product }) => {
   const primaryImage = product.images.find(img => img.is_primary) || product.images[0];
   const imageUrl = primaryImage ? `/storage/${primaryImage.path}` : '/images/placeholder.jpg';
   const hasSale = product.sale_price && parseFloat(product.sale_price) < parseFloat(product.price);
+  
+  // State to track image orientation
+  const [isLandscape, setIsLandscape] = useState<boolean | null>(null);
+  
+  // Function to handle image load and check orientation
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.target as HTMLImageElement;
+    setIsLandscape(img.naturalWidth > img.naturalHeight);
+  };
 
   return (
     <div className="group">
-      <div className="relative aspect-[3/4] overflow-hidden bg-gray-50">
+      <div className={`relative ${isLandscape === null ? 'aspect-[3/4]' : isLandscape ? 'aspect-video' : 'aspect-[3/4]'} overflow-hidden bg-gray-50`}>
         {/* Sale Badge */}
         {hasSale && (
           <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-semibold px-2 py-1 z-10">
@@ -50,7 +60,8 @@ const ProductCard = ({ product }: { product: Product }) => {
           <img
             src={imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className={`w-full h-full ${isLandscape ? 'object-contain' : 'object-cover'} transition-transform duration-300 group-hover:scale-105`}
+            onLoad={handleImageLoad}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.onerror = null;
