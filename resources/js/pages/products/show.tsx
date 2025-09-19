@@ -2,6 +2,7 @@ import ShopHeader from '@/components/shop/header'
 import Footer from '@/components/shop/footer'
 import { Link } from '@inertiajs/react'
 import { useState } from 'react'
+import { MessageSquare, Phone } from 'lucide-react'
 import { Product, ProductImage } from '@/types'
 
 export default function ProductShow({ product, similar }: { product: Product; similar: Product[] }) {
@@ -63,6 +64,32 @@ export default function ProductShow({ product, similar }: { product: Product; si
           <div className="pt-4 border-t">
             <h3 className="font-medium mb-2">Category</h3>
             <p className="text-gray-700 dark:text-gray-300">{product.category?.name || 'Uncategorized'}</p>
+          </div>
+
+          {/* Contact Section */}
+          <div className="pt-4 border-t">
+            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Contact Seller</h3>
+            <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">
+              Interested in this product? Contact us directly for more information or to place an order.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <a
+                href={`https://wa.me/256775394449?text=I'm interested in ${encodeURIComponent(product.name)} (${window.location.href})`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium transition"
+              >
+                <MessageSquare className="w-4 h-4" />
+                WhatsApp
+              </a>
+              <a
+                href="tel:+256775394449"
+                className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md text-sm font-medium transition"
+              >
+                <Phone className="w-4 h-4" />
+                Call Now
+              </a>
+            </div>
           </div>
         </div>
       </div>
