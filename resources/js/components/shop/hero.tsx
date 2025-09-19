@@ -5,7 +5,7 @@ export default function NewHero() {
     <section className="relative min-h-screen flex items-center overflow-hidden" id="home">
       {/* Background */}
       <div className="absolute inset-0 bg-cover bg-center" style={{ 
-        backgroundImage: "url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308')" 
+        backgroundImage: "url('/images/hero.webp')" 
       }}>
         <div className="absolute inset-0 bg-black/60"></div>
       </div>
@@ -15,16 +15,16 @@ export default function NewHero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[90vh] py-20">
           <div className="text-white space-y-6">
             <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
-              <span className="text-sm font-medium tracking-wider">PREMIUM INTERIOR DESIGN</span>
+              <span className="text-sm font-medium tracking-wider">PREMIUM INTERIOR MATERIALS</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-light leading-tight">
-              Transform Your Space Into
-              <span className="block font-medium mt-2">Modern Elegance</span>
+              Quality Materials for
+              <span className="block font-medium mt-2">Your Dream Home</span>
             </h1>
             
             <p className="text-lg text-gray-200 max-w-xl">
-              We create beautiful, functional spaces that reflect your unique style.
+              Discover our premium selection of high-quality materials to bring your home renovation and design projects to life.
             </p>
             
             <div className="flex flex-wrap gap-3 pt-4">
