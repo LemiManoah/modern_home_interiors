@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\ProductRequest;
-use App\Models\Category;
+use Inertia\Inertia;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
+use App\Http\Requests\Admin\ProductRequest;
+use App\Http\Requests\Admin\ProductCreateRequest;
+use App\Http\Requests\Admin\ProductUpdateRequest;
 
 class ProductController extends Controller
 {
@@ -20,7 +22,7 @@ class ProductController extends Controller
 	public function index()
 	{
 		$products = Product::query()
-			->with(['category', 'images', 'tags'])
+			->with(['category', 'images'])
 			->latest()
 			->paginate(20);
 		return Inertia::render('admin/products/index', [
@@ -34,7 +36,7 @@ class ProductController extends Controller
 	public function create()
 	{
 		$categories = Category::orderBy('name')->get(['id', 'name']);
-		return Inertia::render('admin/products/form', [
+		return Inertia::render('admin/products/create', [
 			'categories' => $categories,
 		]);
 	}
@@ -42,20 +44,15 @@ class ProductController extends Controller
 	/**
 	 * Store a newly created resource in storage.
 	 */
-	public function store(ProductRequest $request)
+	public function store(ProductCreateRequest $request)
 	{
 		$data = $request->validated();
-		$tags = $data['tags'] ?? [];
-		unset($data['tags']);
 		$images = $request->file('images', []);
 		$primaryIndex = (int) ($data['primary_image_index'] ?? -1);
 		unset($data['primary_image_index']);
 
-		DB::transaction(function () use ($data, $tags, $images, $primaryIndex) {
+		DB::transaction(function () use ($data, $images, $primaryIndex) {
 			$product = Product::create($data);
-			if (!empty($tags)) {
-				$product->tags()->sync($tags);
-			}
 			foreach ($images as $index => $file) {
 				$path = $file->store('products', 'public');
 				ProductImage::create([
@@ -75,7 +72,7 @@ class ProductController extends Controller
 	 */
 	public function show(Product $product)
 	{
-		$product->load(['category', 'images', 'tags']);
+		$product->load(['category', 'images']);
 		return Inertia::render('admin/products/show', [
 			'product' => $product,
 		]);
@@ -86,9 +83,9 @@ class ProductController extends Controller
 	 */
 	public function edit(Product $product)
 	{
-		$product->load(['images', 'tags']);
+		$product->load(['images']);
 		$categories = Category::orderBy('name')->get(['id', 'name']);
-		return Inertia::render('admin/products/form', [
+		return Inertia::render('admin/products/edit', [
 			'product' => $product,
 			'categories' => $categories,
 		]);
@@ -97,18 +94,17 @@ class ProductController extends Controller
 	/**
 	 * Update the specified resource in storage.
 	 */
-	public function update(ProductRequest $request, Product $product)
+	public function update(ProductUpdateRequest $request, Product $product)
 	{
 		$data = $request->validated();
-		$tags = $data['tags'] ?? [];
-		unset($data['tags']);
 		$newImages = $request->file('images', []);
 		$primaryIndex = (int) ($data['primary_image_index'] ?? -1);
 		unset($data['primary_image_index']);
 
-		DB::transaction(function () use ($product, $data, $tags, $newImages, $primaryIndex) {
+		DB::transaction(function () use ($product, $data, $newImages, $primaryIndex) {
 			$product->update($data);
-			$product->tags()->sync($tags);
+
+			// Add new images if any
 			$positionStart = (int) ($product->images()->max('position') ?? -1) + 1;
 			foreach ($newImages as $offset => $file) {
 				$path = $file->store('products', 'public');
@@ -116,12 +112,20 @@ class ProductController extends Controller
 					'product_id' => $product->id,
 					'path' => $path,
 					'position' => $positionStart + $offset,
-					'is_primary' => $primaryIndex === $offset,
+					'is_primary' => false, // will reset below
 				]);
 			}
+
+			// Reset all primary flags
+			$product->images()->update(['is_primary' => false]);
+
+			// Set primary if index provided
 			if ($primaryIndex >= 0) {
-				$product->images()->update(['is_primary' => false]);
-				$primaryImage = $product->images()->orderBy('position')->skip($primaryIndex)->first();
+				$primaryImage = $product->images()
+					->orderBy('position')
+					->skip($primaryIndex)
+					->first();
+
 				if ($primaryImage) {
 					$primaryImage->update(['is_primary' => true]);
 				}
@@ -130,6 +134,7 @@ class ProductController extends Controller
 
 		return redirect()->route('admin.products.index');
 	}
+
 
 	/**
 	 * Remove the specified resource from storage.
@@ -144,16 +149,21 @@ class ProductController extends Controller
 	}
 
 	/**
- * Remove the specified product image from storage.
- */
-public function destroyImage(ProductImage $image)
-{
-    // Delete the file from storage
-    Storage::disk('public')->delete($image->path);
-    
-    // Delete the image record
-    $image->delete();
-    
-    return response()->noContent();
-}
+	 * Remove the specified product image from storage.
+	 */
+	public function destroyImage(Product $product, ProductImage $image)
+	{
+		// Make sure the image belongs to this product
+		if ($image->product_id !== $product->id) {
+			abort(403);
+		}
+	
+		// Delete from storage
+		Storage::disk('public')->delete($image->path);
+	
+		// Delete record
+		$image->delete();
+	
+		return response()->json(['success' => 'Image removed successfully']);
+	}
 }

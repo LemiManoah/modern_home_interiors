@@ -31,6 +31,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('users', AdminUserController::class);
     Route::resource('contact-messages', ContactMessageController::class);
     // Add this route with the others
-    Route::delete('products/images/{image}', [AdminProductController::class, 'destroyImage'])
+    Route::delete('/admin/products/{product}/images/{image}', [AdminProductController::class, 'destroyImage'])
     ->name('admin.products.images.destroy');
 });

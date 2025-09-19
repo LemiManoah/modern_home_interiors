@@ -15,7 +15,6 @@ class ProductController extends Controller
             'images' => function ($q) {
                 $q->orderBy('is_primary', 'desc')->orderBy('position');
             },
-            'tags',
         ]);
 
         $similar = Product::query()

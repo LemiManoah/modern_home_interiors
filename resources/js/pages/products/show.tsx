@@ -2,8 +2,9 @@ import ShopHeader from '@/components/shop/header'
 import Footer from '@/components/shop/footer'
 import { Link } from '@inertiajs/react'
 import { useState } from 'react'
+import { Product, ProductImage } from '@/types'
 
-export default function ProductShow({ product, similar }: any) {
+export default function ProductShow({ product, similar }: { product: Product; similar: Product[] }) {
   const [active, setActive] = useState(product.images?.[0] ?? null)
   return (
     <div className="min-h-screen flex flex-col">
@@ -16,21 +17,52 @@ export default function ProductShow({ product, similar }: any) {
             ) : null}
           </div>
           <div className="mt-2 grid grid-cols-5 gap-2">
-            {product.images?.map((img: any) => (
+            {product.images?.map((img: ProductImage) => (
               <button key={img.id} className={`aspect-square border rounded overflow-hidden ${active?.id === img.id ? 'ring-2 ring-black dark:ring-white' : ''}`} onClick={() => setActive(img)}>
                 <img src={`/storage/${img.path}`} alt="thumb" className="h-full w-full object-cover" />
               </button>
             ))}
           </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-semibold">{product.name}</h1>
-          <div className="mt-2 text-xl font-medium">${product.price}</div>
-          <p className="mt-4 opacity-80 whitespace-pre-line">{product.description}</p>
-          <div className="mt-4 flex gap-2 flex-wrap">
-            {product.tags?.map((t: any) => (
-              <span key={t.id} className="text-xs border rounded px-2 py-0.5">{t.name}</span>
-            ))}
+        <div className="space-y-4">
+          <div>
+            <h1 className="text-2xl font-semibold">{product.name}</h1>
+            <div className="flex items-baseline gap-3 mt-2">
+              {product.sale_price ? (
+                <>
+                  <span className="text-2xl font-bold text-red-600">
+                    UGX {Number(product.sale_price).toLocaleString('en-US')}
+                  </span>
+                  <span className="text-lg text-gray-500 line-through">
+                    UGX {Number(product.price).toLocaleString('en-US')}
+                  </span>
+                  <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-800 text-xs font-medium rounded">
+                    {Math.round(((product.price - product.sale_price) / product.price) * 100)}% OFF
+                  </span>
+                </>
+              ) : (
+                <span className="text-2xl font-bold">
+                  UGX {Number(product.price).toLocaleString('en-US')}
+                </span>
+              )}
+            </div>
+            {product.stock_quantity > 0 ? (
+              <div className="mt-2 text-sm text-green-600">
+                In Stock ({product.stock_quantity} available)
+              </div>
+            ) : (
+              <div className="mt-2 text-sm text-red-600">Out of Stock</div>
+            )}
+          </div>
+          
+          <div className="pt-4 border-t">
+            <h3 className="font-medium mb-2">Product Details</h3>
+            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">{product.description}</p>
+          </div>
+          
+          <div className="pt-4 border-t">
+            <h3 className="font-medium mb-2">Category</h3>
+            <p className="text-gray-700 dark:text-gray-300">{product.category?.name || 'Uncategorized'}</p>
           </div>
         </div>
       </div>
@@ -38,7 +70,7 @@ export default function ProductShow({ product, similar }: any) {
       <div className="mx-auto max-w-6xl px-4 pb-10 w-full">
         <h2 className="text-lg font-semibold mb-3">Similar products</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {similar.map((p: any) => {
+          {similar.map((p: Product) => {
             const cover = p.images?.[0]
             return (
               <Link key={p.id} href={`/products/${p.id}`} className="group">
@@ -49,7 +81,7 @@ export default function ProductShow({ product, similar }: any) {
                 </div>
                 <div className="mt-2 flex items-center justify-between">
                   <span>{p.name}</span>
-                  <span className="font-medium">${p.price}</span>
+                  <span className="font-medium">UGX {Number(p.price).toLocaleString('en-US')}</span>
                 </div>
               </Link>
             )
