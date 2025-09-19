@@ -155,7 +155,7 @@ export default function CreateProductPage({ categories }: CreateProductProps) {
                         min="0"
                         value={data.price}
                         onChange={(e) => setData('price', e.target.value)}
-                        className={`pl-8 py-3 sm:py-2 text-sm sm:text-base ${
+                        className={`pl-14 py-3 sm:py-2 text-sm sm:text-base ${
                           errors.price ? 'border-red-500 focus-visible:ring-red-500' : ''
                         }`}
                         inputMode="decimal"
@@ -179,7 +179,7 @@ export default function CreateProductPage({ categories }: CreateProductProps) {
                         min="0"
                         value={data.sale_price}
                         onChange={(e) => setData('sale_price', e.target.value)}
-                        className={`pl-8 py-3 sm:py-2 text-sm sm:text-base ${
+                        className={`pl-14 py-3 sm:py-2 text-sm sm:text-base ${
                           errors.sale_price ? 'border-red-500 focus-visible:ring-red-500' : ''
                         }`}
                         inputMode="decimal"

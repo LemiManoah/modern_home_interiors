@@ -27,6 +27,7 @@ class ProductUpdateRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'sale_price' => ['nullable', 'numeric', 'min:0', 'lt:price'],
+            'stock_quantity' => ['required', 'numeric', 'min:0'],
             'is_active' => ['sometimes', 'boolean'],
             'is_featured' => ['sometimes', 'boolean'],
 
@@ -53,7 +54,9 @@ class ProductUpdateRequest extends FormRequest
             'sale_price.numeric' => 'Enter a valid sale price',
             'sale_price.min' => 'Sale price cannot be less than 0',
             'sale_price.lt' => 'Sale price must be less than regular price',
-
+            'stock_quantity.required' => 'Stock quantity is required',
+            'stock_quantity.numeric' => 'Enter a valid stock quantity',
+            'stock_quantity.min' => 'Stock quantity cannot be less than 0',
             'images.*.file' => 'Each file must be a valid file',
             'images.*.image' => 'Each file must be a valid image',
             'images.*.mimes' => 'Allowed formats: jpg, png, jpeg, gif, svg, webp',
