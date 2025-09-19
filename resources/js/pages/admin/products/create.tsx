@@ -62,7 +62,7 @@ export default function CreateProductPage({ categories }: CreateProductProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     post('/admin/products', {
-      onSuccess: () => router.visit('admin/products'),
+      onSuccess: () => router.visit('/admin/products'),
       preserveScroll: true,
     });
   };
@@ -86,7 +86,7 @@ export default function CreateProductPage({ categories }: CreateProductProps) {
                         <div className="text-xl text-slate-600">Create Product</div>
 
                         <Button>
-                            <Link href="admin/products" prefetch>
+                            <Link href="/admin/products" prefetch>
                                 Go Back
                             </Link>
                         </Button>
